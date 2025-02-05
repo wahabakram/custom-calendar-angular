@@ -1,15 +1,19 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
+# e2e
 # Compiled output
 /dist
+/build
 /tmp
 /out-tsc
 /bazel-out
+/public
+
+/src/assets
 
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
+yarn.lock
 package-lock.json
 
 # IDEs and editors
@@ -37,19 +41,27 @@ package-lock.json
 /libpeerconnection.log
 testem.log
 /typings
+LICENSE
+.husky
+.prettierignore
 
 # System files
 .DS_Store
 Thumbs.db
+.prettierrc
 
-# Playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
+.stylelintignore
+.gitignore
+.eslintignore
+.editorconfig
+.browserslistrc
+.eslintrc
+.bashrc
+.zshrc
+.nvmrc
+.node-version
+.firebaserc
+src/favicon.ico
 
-*storybook.log
-
-# Playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
+# Storybook
+src/stories/

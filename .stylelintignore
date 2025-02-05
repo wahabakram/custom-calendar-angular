@@ -1,0 +1,6 @@
+**/build
+**/coverage
+/dist
+src/assets
+/public
+src/stories

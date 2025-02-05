@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "/dist/custom-calendar-angular",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
