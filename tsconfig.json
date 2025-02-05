@@ -25,7 +25,7 @@
       "@env/*": ["src/environments/*"],
       "@utils/*": ["./src/app/shared/utils/*"],
       "@constants": ["./src/app/shared/constants"],
-      "@constants/*": ["./src/app/shared/constants/*"],
+      "@constants/*": ["./src/app/shared/constants/*"]
     }
   },
   "angularCompilerOptions": {
