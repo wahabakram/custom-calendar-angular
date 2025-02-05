@@ -9,8 +9,7 @@ describe('AppointmentFormDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppointmentFormDialogComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AppointmentFormDialogComponent);
     component = fixture.componentInstance;

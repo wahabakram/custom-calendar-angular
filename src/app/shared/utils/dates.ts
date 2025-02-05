@@ -1,7 +1,7 @@
 import { DAY_MILLISECONDS, DAYS_IN_WEEK } from '@constants';
 
 // The algorithm just takes current date and returns a medium days range by week
-export const getDates = (weeks: number) => {
+export const getDates = (weeks: number): number[][] => {
   const today = Date.now();
   const dayOfTheWeek = new Date(today).getDay();
   const startWeekDiff = DAY_MILLISECONDS * dayOfTheWeek;

@@ -12,8 +12,4 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 export class HeaderComponent {
   @Input({ required: true }) month = '';
   @Output() monthChange = new EventEmitter<'previous' | 'next'>();
-
-  previousMonth() {}
-
-  nextMonth() {}
 }

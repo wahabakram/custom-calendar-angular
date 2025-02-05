@@ -7,6 +7,7 @@ import { getDates } from '@utils/dates';
 import { pull, range } from '@utils/array';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DAY_MILLISECONDS, DAYS_IN_WEEK } from '@constants';
+
 import { CalendarService, CalendarEvent } from './services/calendar.service';
 import { HeaderComponent } from './components/header/header.component';
 import { RecordComponent } from './components/record/record.component';
@@ -19,28 +20,32 @@ import { AppointmentFormDialogComponent } from './components/appointment-form-di
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent {
-  readonly dialog = inject(MatDialog);
-  private _fb = inject(FormBuilder);
-  private _calendarService = inject(CalendarService);
+  private readonly _fb = inject(FormBuilder);
+  private readonly _calendarService = inject(CalendarService);
+  private _dialogRef!: MatDialogRef<AppointmentFormDialogComponent, CalendarEvent>;
+  private readonly _inputConfig: MatDialogConfig<CalendarEvent> = this._calendarService.getDefaultDialogConfig();
+  private _monthOffset = 0;
+  private _events: Record<string, FormGroup[]> = {};
 
-  private dialogRef!: MatDialogRef<AppointmentFormDialogComponent, CalendarEvent>;
-  private inputConfig: MatDialogConfig<CalendarEvent> = this._calendarService.getDefaultDialogConfig();
+  readonly dialog = inject(MatDialog);
 
   today = new Date();
   tempDate = new Date();
   month = formatDate(this.today, 'MMMM yyyy', 'en-US');
-  private monthOffset = 0;
-  private events: { [date: string]: FormGroup[] } = {};
 
   dates = getDates(5);
 
   weeks = range(this.dates);
   days = range(DAYS_IN_WEEK);
 
-  addEditRecord(day: number, week: number, selectedItemIdx?: number) {
+  private _updateTempDate(year: number, month: number): void {
+    this.tempDate = new Date(year, month, 1);
+  }
+
+  addEditRecord(day: number, week: number, selectedItemIdx?: number): void {
     const date = this.getDate(week, day);
-    this.inputConfig.data = {
-      ...this.inputConfig.data,
+    this._inputConfig.data = {
+      ...this._inputConfig.data,
       day: day,
       week: week,
       title: '',
@@ -48,28 +53,28 @@ export class CalendarComponent {
     };
 
     if (this.haveSelectedItem(selectedItemIdx as number)) {
-      this.inputConfig.data = {
-        ...this.inputConfig.data,
-        ...this.events[date][selectedItemIdx as number].value
+      this._inputConfig.data = {
+        ...this._inputConfig.data,
+        ...this._events[date][selectedItemIdx as number].value
       };
     }
 
-    this.dialogRef = this.dialog.open(AppointmentFormDialogComponent, this.inputConfig);
-    this.dialogRef.afterClosed().subscribe((result) => {
+    this._dialogRef = this.dialog.open(AppointmentFormDialogComponent, this._inputConfig);
+    this._dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const tempFormGroup = this._fb.group({
           title: [result.title],
           description: [result.description]
         });
 
-        if (!this.events[date]) {
-          this.events[date] = [];
+        if (!this._events[date]) {
+          this._events[date] = [];
         }
 
         if (this.haveSelectedItem(selectedItemIdx as number)) {
-          this.events[date][selectedItemIdx as number] = tempFormGroup;
+          this._events[date][selectedItemIdx as number] = tempFormGroup;
         } else {
-          this.events[date].push(tempFormGroup);
+          this._events[date].push(tempFormGroup);
         }
       }
     });
@@ -77,7 +82,7 @@ export class CalendarComponent {
 
   getEvents(week: number, day: number): FormGroup[] {
     const date = this.getDate(week, day);
-    return this.events[date] || [];
+    return this._events[date] || [];
   }
 
   getDate(week: number, day: number): string {
@@ -90,12 +95,12 @@ export class CalendarComponent {
     return index !== undefined && index > -1;
   }
 
-  deleteRecord(day: number, week: number, control: FormGroup) {
+  deleteRecord(day: number, week: number, control: FormGroup): void {
     const date = this.getDate(week, day);
-    pull(this.events[date], control);
+    pull(this._events[date], control);
   }
 
-  dropItem(event: CdkDragDrop<FormGroup[]>) {
+  dropItem(event: CdkDragDrop<FormGroup[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -106,26 +111,26 @@ export class CalendarComponent {
         parseInt(event.previousContainer.id.split(',')[1], 10)
       );
       const item = event.previousContainer.data.splice(event.previousIndex, 1)[0];
-      if (!this.events[date]) {
-        this.events[date] = [];
+      if (!this._events[date]) {
+        this._events[date] = [];
       }
-      this.events[date].splice(event.currentIndex, 0, item);
-      if (this.events[previousDate].length === 0) {
-        delete this.events[previousDate];
+      this._events[date].splice(event.currentIndex, 0, item);
+      if (this._events[previousDate].length === 0) {
+        delete this._events[previousDate];
       }
     }
   }
 
-  monthChange(option: string) {
+  monthChange(option: string): void {
     if (option === 'previous') {
-      this.monthOffset--;
+      this._monthOffset--;
     } else if (option === 'next') {
-      this.monthOffset++;
+      this._monthOffset++;
     }
 
     const weeks = this.dates.length;
     const date = new Date(this.today);
-    date.setMonth(date.getMonth() + this.monthOffset);
+    date.setMonth(date.getMonth() + this._monthOffset);
     date.setDate(1); // Set the date to the first day of the month
     const dayOfTheWeek = date.getDay();
     const startWeekDiff = DAY_MILLISECONDS * dayOfTheWeek;
@@ -144,10 +149,6 @@ export class CalendarComponent {
     this.dates = newDates;
     // Update the month name
     this.month = formatDate(date, 'MMMM yyyy', 'en-US');
-    this.updateTempDate(date.getFullYear(), date.getMonth());
-  }
-
-  private updateTempDate(year: number, month: number) {
-    this.tempDate = new Date(year, month, 1);
+    this._updateTempDate(date.getFullYear(), date.getMonth());
   }
 }

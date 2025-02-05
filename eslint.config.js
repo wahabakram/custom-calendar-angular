@@ -250,7 +250,8 @@ module.exports = tseslint.config(
             match: false
           }
         }
-      ]
+      ],
+      '@typescript-eslint/no-dynamic-delete': 'off'
     }
   },
   {

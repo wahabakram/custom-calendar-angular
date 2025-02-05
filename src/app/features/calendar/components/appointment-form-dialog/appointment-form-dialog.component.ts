@@ -23,8 +23,8 @@ import { MatRippleModule } from '@angular/material/core';
   styleUrl: './appointment-form-dialog.component.scss'
 })
 export class AppointmentFormDialogComponent {
-  private _dialogRef = inject(MatDialogRef<AppointmentFormDialogComponent>);
-  private _fb = inject(FormBuilder);
+  private readonly _dialogRef = inject(MatDialogRef<AppointmentFormDialogComponent>);
+  private readonly _fb = inject(FormBuilder);
   public dialog = inject(MatDialog);
   formGroup!: FormGroup;
 

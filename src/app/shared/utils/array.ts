@@ -1,4 +1,4 @@
-export const range = (input: Array<unknown> | number): number[] => {
+export const range = (input: unknown[] | number): number[] => {
   if (Array.isArray(input)) {
     return input.map((item, index) => index);
   }

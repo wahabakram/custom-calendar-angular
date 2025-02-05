@@ -9,22 +9,20 @@ export interface CalendarEvent {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CalendarService {
-  private eventData: CalendarEvent = {
+  private readonly _eventData: CalendarEvent = {
     day: 0,
     week: 0,
     title: '',
-    description: '',
+    description: ''
   };
-
-  constructor() {}
 
   getDefaultDialogConfig(data?: CalendarEvent): MatDialogConfig<CalendarEvent> {
     return {
       width: '520px',
-      data: data ?? this.eventData,
+      data: data ?? this._eventData
     };
   }
 }
