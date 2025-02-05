@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "/dist/custom-calendar-angular",
+    "public": "/dist/custom-calendar-angular/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
